@@ -22,8 +22,13 @@ function [gradMu, gradB, gradD] = noisygrad(X, parameter, G, V, V1, OmegaBar, al
 % OUTPUTS:
 % gradMu, gradB, gradD: gradients of Gaussian Factor VB parameters lambda
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% grad of joint
 gradLogPost = gradLogPost_TraceGrad01(X, G, V, V1, OmegaBar, alpha, delta, nu, l, w, sigma2, a1, b1, a2, b2);
+K_G = size(G,2);
+% grad of margin
+[grad_ThetaTilde_loglike] = grad_st_margin_num(X, parameter, K_G, 'skew-t', 2);
+gradLogPost = gradLogPost - grad_ThetaTilde_loglike;
+
 gradGaussVA = grad_GaussVA(VAMu, VAB, VAD, parameter);
 
 gradMu = gradLogPost - gradGaussVA;
