@@ -79,6 +79,7 @@ addpath('Results/'); %directory containing results from paper
 
 % Loading the VB fit
 Fit_File = load("d17_K2_R3.mat");
+% Fit_File = load(filename);
 
 % Calculating the empirical and analytical skew-t quantile dependence metrics
 % with quantile level at u 

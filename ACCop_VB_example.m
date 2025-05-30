@@ -51,15 +51,15 @@ P = d+d*K+1;
 [OmegaBar_mean, delta_mean, nu_mean, alpha_mean, G_mean, OmegaBar_std, delta_std, nu_std, alpha_std, G_std] = summary_stc_vb(VAMu, VAB, VAD, P, K, R, d, family, LB_dof);
 
 %% Saving the results using the current date
-% datetxt = datetime("now",'Format','ddMMMyyyy_HHmmss');
-% destinationFolder = sprintf('Results_%s', datetxt);
-% if ~exist(destinationFolder, 'dir')
-%     mkdir(destinationFolder);
-% end
-% 
-% filename = sprintf('%s/d%d_K%d_R%d.mat', destinationFolder, d, K, R);
-% parsave(filename,family,LB_dof,d,P,K,R,Lambda,logpost_stc,Time,...
-%     OmegaBar_mean, delta_mean, nu_mean, alpha_mean, G_mean, OmegaBar_std, delta_std, nu_std, alpha_std, G_std);
+datetxt = datetime("now",'Format','ddMMMyyyy_HHmmss');
+destinationFolder = sprintf('Results_%s', datetxt);
+if ~exist(destinationFolder, 'dir')
+    mkdir(destinationFolder);
+end
+
+filename = sprintf('%s/d%d_K%d_R%d.mat', destinationFolder, d, K, R);
+parsave(filename,family,LB_dof,d,P,K,R,Lambda,logpost_stc,Time,...
+    OmegaBar_mean, delta_mean, nu_mean, alpha_mean, G_mean, OmegaBar_std, delta_std, nu_std, alpha_std, G_std);
 
 %% Plotting summary of quantile dependence metrics from saved results
 % Note that the data and VB file can be changed
@@ -68,6 +68,7 @@ addpath('Results/'); %directory containing results from paper
 %Loading original file and the VB fit
 Ori_File = load("simulation_Data_5D.mat");
 Fit_File = load("d5_K1_R3.mat");
+% Fit_File = load(filename);
 
 % Ori_File = load("simulation_Data_30D.mat");
 % Fit_File = load("d30_K5_R3.mat");
@@ -109,7 +110,7 @@ X_mat = zeros(Iteration,d);
 
 for i = 1:Iteration
     U_sample = sim_posterior_stc_vb(Lambda.VAMu, Lambda.VAB, Lambda.VAD, P, K, R, d, family, LB_dof);
-    U_mat(:,i) = U_sample(:);
+    U_mat(i,:) = U_sample(:);
 
     %% Transform the simulated copula data to the raw data scale by inverting the
     % % specified marginal distribution. eg: t-distribution
